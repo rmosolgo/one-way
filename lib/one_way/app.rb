@@ -1,3 +1,4 @@
+# A thing that maps Rack requests to the Router
 class OneWay::App
   def self.create
     builder = Rack::Builder.new do
@@ -5,11 +6,8 @@ class OneWay::App
       use Rack::ContentLength
 
       app = proc do |env|
-        req = Rack::Request.new(env)
-        method = env["REQUEST_METHOD"]
-        path = req.path
-        params = req.params
-        OneWay::Router.render(method, path, params)
+        request = Rack::Request.new(env)
+        OneWay::Router.render(request)
       end
 
       run app

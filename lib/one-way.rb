@@ -1,4 +1,5 @@
 require 'active_support/core_ext/hash'
+require 'active_support/core_ext/string'
 require 'rack'
 require 'json'
 
@@ -16,7 +17,6 @@ module OneWay
 
   def self.reset
     Dispatcher.reset
-    Action.reset
     Store.reset
     Router.reset
   end

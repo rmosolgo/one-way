@@ -1,3 +1,5 @@
+# Stores data as instance variables
+# May subscribe to action classes with `.handle_action`
 class OneWay::Store
   extend OneWay::Singleton
   extend OneWay::ParentClass

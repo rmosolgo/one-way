@@ -1,14 +1,16 @@
+# Stores register handlers here.
+# Actions ask Dispatcher to dispatch them.
 class OneWay::Dispatcher
   def initialize
     @handlers = Hash.new { |hash, key| hash[key] = [] }
   end
 
-  def register(action_class, handler)
-    @handlers[action_class] << handler
+  def register(handler)
+    @handlers[handler.action] << handler
   end
 
   def dispatch(action)
-    handlers = @handlers[action.class]
+    handlers = @handlers[action.class.name]
     handlers.each do |handler|
       handler.call(action)
     end
@@ -24,12 +26,12 @@ class OneWay::Dispatcher
       @instance = new
     end
 
-    def register(handler)
-      instance.register(handler.action, handler)
-    end
-
-    def dispatch(action)
-      instance.dispatch(action)
+    def method_missing(method_name, *args, &block)
+      if instance.respond_to?(method_name)
+        instance.send(method_name, *args, &block)
+      else
+        super
+      end
     end
   end
 end

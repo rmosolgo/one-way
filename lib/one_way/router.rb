@@ -1,38 +1,33 @@
+# Maps routes to renderers (views & actions)
+# Also exposes that info (for View#link_to, for example)
 class OneWay::Router
-  attr_reader :routes
+  extend OneWay::Singleton
 
+  class Route
+    attr_reader :path, :responder_class, :name
+    def initialize(path:, responder_class:, name:)
+      @path = path
+      @responder_class = responder_class
+      @name = name
+    end
+  end
+
+  attr_reader :routes
   def initialize
-    @routes = {}
+    @routes = []
   end
 
   def route(path, responder_class)
-    routes[path] = responder_class
+    route_name = responder_class.name.sub(/View$/, '').underscore
+    routes << Route.new(path: path, name: route_name, responder_class: responder_class)
   end
 
-  def render(method, path, params)
-    responder_class = routes[path]
-    responder_class.render(path, params)
+  def route_for(key, value)
+    routes.find {|r| r.send(key) == value } || raise("Route not found for #{key}: #{value} (registered: #{routes.map(&key)})")
   end
 
-  class << self
-    def reset
-      @instance = nil
-    end
-
-    def instance
-      @instance ||= new
-    end
-
-    def routes
-      instance.routes
-    end
-
-    def route(*args)
-      instance.route(*args)
-    end
-
-    def render(*args)
-      instance.render(*args)
-    end
+  def render(request)
+    route = route_for(:path, request.path)
+    route.responder_class.render(request)
   end
 end

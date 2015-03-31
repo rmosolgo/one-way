@@ -1,6 +1,7 @@
 require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
+require 'ostruct'
 require "minitest/autorun"
 require "minitest/focus"
 require "minitest/reporters"

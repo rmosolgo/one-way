@@ -11,17 +11,17 @@ describe OneWay::Store do
 
   it 'listens for actions' do
     assert_equal(0, CountStore.value)
-    IncrementCount.trigger
-    IncrementCount.trigger
+    IncrementCount.render(OpenStruct.new)
+    IncrementCount.render(OpenStruct.new)
     assert_equal(2, CountStore.value)
   end
 
   it 'handles actions with values' do
     assert_equal(0, CountStore.value)
-    AlterCount.trigger(alter_by: -5)
+    AlterCount.render(OpenStruct.new(params: {alter_by: -5}))
     assert_equal(-5, CountStore.value)
-    AlterCount.trigger(alter_by: 10)
-    IncrementCount.trigger
+    AlterCount.render(OpenStruct.new(params: {alter_by: 10}))
+    IncrementCount.render(OpenStruct.new)
     assert_equal(6, CountStore.value)
   end
 end
