@@ -18,9 +18,9 @@ describe OneWay::Store do
 
   it 'handles actions with values' do
     assert_equal(0, CountStore.value)
-    AlterCount.render(OpenStruct.new(params: {alter_by: -5}))
+    AlterCount.render(OpenStruct.new(params: {"alter_by" => -5}))
     assert_equal(-5, CountStore.value)
-    AlterCount.render(OpenStruct.new(params: {alter_by: 10}))
+    AlterCount.render(OpenStruct.new(params: {"alter_by" => 10}))
     IncrementCount.render(OpenStruct.new)
     assert_equal(6, CountStore.value)
   end

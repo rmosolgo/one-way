@@ -1,7 +1,7 @@
 require 'one-way'
 
-# Actions are basically just constants that
-# respond to `.trigger`
+# Actions are dispatched in response to HTTP requests.
+# They pass data though the system and may send a new view back to the client.
 class IncrementCount < OneWay::Action
 end
 
@@ -12,7 +12,7 @@ end
 
 
 # Stores subscribe to actions with `.handle_action`.
-# They can fetch an initial value in `#intialize`.
+# They can fetch an initial value in `#initialize`.
 class CountStore < OneWay::Store
   reader_method :value
   attr_reader :value
@@ -32,6 +32,7 @@ end
 
 
 # Views read from stores.
+# They can link to actions or views.
 class CountView < OneWay::View
   def render(request)
     "
@@ -52,7 +53,7 @@ class AlteredCountView < OneWay::View
   end
 end
 
-# This binds the Dispatcher etc.
+# This binds the Dispatcher, reloads Stores etc.
 OneWay.reset
 
 # Routes go to Views _or_ Actions
